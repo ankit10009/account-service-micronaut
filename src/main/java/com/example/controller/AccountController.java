@@ -9,12 +9,7 @@ import com.example.service.AccountService;
 
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.*;
 
 @Controller("/accounts")
 public class AccountController {
@@ -44,7 +39,7 @@ public class AccountController {
     }
 
     @Put("/{accountId}/balance")
-    public HttpResponse<Account> updateAccountBalance(@PathVariable Long accountId, @Body BigDecimal newBalance) {
+    public HttpResponse<Account> updateAccountBalance(@PathVariable Long accountId, @QueryValue BigDecimal newBalance) {
         return HttpResponse.ok(accountService.updateAccountBalance(accountId, newBalance));
     }
 
