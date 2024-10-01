@@ -1,14 +1,21 @@
 package com.example.service;
 
-import jakarta.inject.Singleton;
-
 import java.math.BigDecimal;
 import java.util.Optional;
+
+import com.example.model.Account;
+import com.example.repo.AccountRepository;
+
+import jakarta.inject.Singleton;
 
 @Singleton
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    
+    public Account createAccount(Account account) {
+        return accountRepository.save(account);
+    }
 
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;

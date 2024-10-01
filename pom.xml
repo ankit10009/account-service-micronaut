@@ -3,23 +3,24 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.example</groupId>
-  <artifactId>accountservice</artifactId>
+  <artifactId>account-service-micronaut</artifactId>
   <version>0.1</version>
   <packaging>${packaging}</packaging>
 
   <parent>
-    <groupId>io.micronaut.platform</groupId>
+    <groupId>io.micronaut</groupId>
     <artifactId>micronaut-parent</artifactId>
-    <version>4.6.2</version>
+    <version>3.10.1</version>
   </parent>
+
   <properties>
     <packaging>jar</packaging>
     <jdk.version>17</jdk.version>
     <release.version>17</release.version>
-    <micronaut.version>4.6.2</micronaut.version>
-    <micronaut.aot.enabled>false</micronaut.aot.enabled>
-    <micronaut.aot.packageName>com.example.aot.generated</micronaut.aot.packageName>
+    <micronaut.version>3.10.1</micronaut.version>
+    <micronaut.data.version>3.10.0</micronaut.data.version>
     <micronaut.runtime>netty</micronaut.runtime>
+    <micronaut.test.resources.enabled>true</micronaut.test.resources.enabled>
     <exec.mainClass>com.example.Application</exec.mainClass>
   </properties>
 
@@ -33,23 +34,49 @@
   <dependencies>
     <dependency>
       <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-http-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut</groupId>
       <artifactId>micronaut-http-server-netty</artifactId>
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>io.micronaut.serde</groupId>
-      <artifactId>micronaut-serde-jackson</artifactId>
+      <groupId>io.micronaut</groupId>
+      <artifactId>micronaut-jackson-databind</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.micronaut.data</groupId>
+      <artifactId>micronaut-data-hibernate-jpa</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.sql</groupId>
+      <artifactId>micronaut-hibernate-jpa</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.micronaut.sql</groupId>
+      <artifactId>micronaut-jdbc-hikari</artifactId>
+      <scope>compile</scope>
+    </dependency>
+        
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
-      <groupId>io.micronaut</groupId>
-      <artifactId>micronaut-http-client</artifactId>
-      <scope>test</scope>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.micronaut.test</groupId>
@@ -67,19 +94,16 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
-        <groupId>io.micronaut.maven</groupId>
+        <groupId>io.micronaut.build</groupId>
         <artifactId>micronaut-maven-plugin</artifactId>
-        <configuration>
-          <configFile>aot-${packaging}.properties</configFile>
-        </configuration>
+          <configuration>
+          </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -87,44 +111,45 @@
           <!-- Uncomment to enable incremental compilation -->
           <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
 
-          <annotationProcessorPaths combine.children="append">
+          <annotationProcessorPaths combine.self="override">
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut</groupId>
+              <artifactId>micronaut-inject-java</artifactId>
+              <version>${micronaut.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut.data</groupId>
+              <artifactId>micronaut-data-processor</artifactId>
+              <version>${micronaut.data.version}</version>
+            </path>
+            <path>
+              <groupId>io.micronaut</groupId>
+              <artifactId>micronaut-graal</artifactId>
+              <version>${micronaut.version}</version>
+            </path>
             <path>
               <groupId>io.micronaut</groupId>
               <artifactId>micronaut-http-validation</artifactId>
-              <version>${micronaut.core.version}</version>
+              <version>${micronaut.version}</version>
             </path>
             <path>
-              <groupId>io.micronaut.serde</groupId>
-              <artifactId>micronaut-serde-processor</artifactId>
-              <version>${micronaut.serialization.version}</version>
-              <exclusions>
-                <exclusion>
-                  <groupId>io.micronaut</groupId>
-                  <artifactId>micronaut-inject</artifactId>
-                </exclusion>
-              </exclusions>
+              <groupId>io.micronaut</groupId>
+              <artifactId>micronaut-validation</artifactId>
+              <version>${micronaut.version}</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
             <arg>-Amicronaut.processing.group=com.example</arg>
-            <arg>-Amicronaut.processing.module=accountservice</arg>
+            <arg>-Amicronaut.processing.module=payee-service</arg>
           </compilerArgs>
         </configuration>
       </plugin>
     </plugins>
   </build>
 
-    <pluginRepositories>
-       <pluginRepository>
-           <id>central</id>
-           <url>https://repo.maven.apache.org/maven2</url>
-       </pluginRepository>
-       <pluginRepository>
-           <id>ossrh</id>
-           <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-           <snapshots>
-               <enabled>true</enabled>
-           </snapshots>
-       </pluginRepository>
-    </pluginRepositories>
 </project>

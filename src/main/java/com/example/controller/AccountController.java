@@ -1,9 +1,20 @@
 package com.example.controller;
 
-import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.*;
-
 import java.math.BigDecimal;
+
+import javax.validation.Valid;
+
+import com.example.model.Account;
+import com.example.service.AccountService;
+
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 
 @Controller("/accounts")
 public class AccountController {
@@ -13,6 +24,12 @@ public class AccountController {
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
+    
+    @Post
+    public HttpResponse<Account> createAccount(@Body @Valid Account account) {
+        return HttpResponse.status(HttpStatus.CREATED).body(accountService.createAccount(account));
+    }
+    
 
     @Get("/{accountId}")
     public HttpResponse<Account> getAccountById(@PathVariable Long accountId) {
