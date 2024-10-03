@@ -8,8 +8,8 @@ datasources:
     driver-class-name: org.postgresql.Driver
     db-type: postgres
     dialect: POSTGRES
-    url: jdbc:postgresql://localhost:5432/mnpayment
-    username: restcrud
+    url: jdbc:postgresql://localhost:5432/rest-crud
+    username: postgres
     password: restcrud
 jpa:
   default:
@@ -22,3 +22,12 @@ netty:
   default:
     allocator:
       max-order: 3
+eureka:
+  client:
+    registration:
+      enabled: true
+    defaultZone: "${EUREKA_HOST:localhost}:${EUREKA_PORT:8761}"
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
